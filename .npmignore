@@ -1,0 +1,26 @@
+# Source files (only dist is published)
+src/
+
+# Development configs
+tsconfig.json
+.gitignore
+.github/
+
+# Test files
+**/*.test.ts
+**/*.spec.ts
+test/
+coverage/
+
+# Editor directories and files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS files
+.DS_Store
+Thumbs.db

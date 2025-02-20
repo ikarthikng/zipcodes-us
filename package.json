@@ -1,0 +1,48 @@
+{
+  "name": "us-zipcodes",
+  "version": "0.1.0",
+  "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "data"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsc",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "zipcode",
+    "zip",
+    "us",
+    "postal",
+    "code",
+    "lookup",
+    "geo",
+    "location",
+    "address",
+    "find",
+    "find city by zipcode",
+    "find state by zipcode",
+    "find county by zipcode",
+    "find geo by zipcode"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.7.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikarthikng/us-zipcodes.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ikarthikng/us-zipcodes/issues"
+  },
+  "homepage": "https://github.com/ikarthikng/us-zipcodes#readme"
+}
