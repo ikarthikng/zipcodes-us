@@ -44,10 +44,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ikarthikng/us-zipcodes.git"
+    "url": "git+https://github.com/ikarthikng/zipcodes-us.git"
   },
   "bugs": {
-    "url": "https://github.com/ikarthikng/us-zipcodes/issues"
+    "url": "https://github.com/ikarthikng/zipcodes-us/issues"
   },
-  "homepage": "https://github.com/ikarthikng/us-zipcodes#readme"
+  "homepage": "https://github.com/ikarthikng/zipcodes-us#readme"
 }
