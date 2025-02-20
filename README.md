@@ -1,4 +1,4 @@
-# us-zipcodes
+# zipcodes-us
 
 A lightweight and efficient US ZIP code lookup library with no external dependencies.
 
