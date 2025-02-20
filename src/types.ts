@@ -41,3 +41,34 @@ export interface RawZipData {
   longitude: number
   accuracy: number
 }
+
+/**
+ * Interface for standardized ZIP code lookup results
+ */
+export interface ZipLookupResult {
+  state: string
+  stateCode: string
+  city: string
+  county: string
+  latitude: number
+  longitude: number
+  isValid: boolean
+}
+
+/**
+ * Interface for coordinates result
+ */
+export interface Coordinates {
+  latitude: number
+  longitude: number
+  isValid: boolean
+}
+
+/**
+ * Interface for state result
+ */
+export interface StateResult {
+  state: string
+  stateCode: string
+  isValid: boolean
+}

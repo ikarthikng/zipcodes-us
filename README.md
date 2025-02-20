@@ -15,17 +15,17 @@ A lightweight and efficient US ZIP code lookup library with no external dependen
 ## Installation
 
 ```bash
-npm install us-zipcodes
+npm install zipcodes-us
 ```
 
 ## Usage
 
 ```typescript
-import zipcodes from 'us-zipcodes';
+import zipcodes from "zipcodes-us"
 
 // Complete lookup with validity check
-const info = zipcodes.find('90210');
-console.log(info);
+const info = zipcodes.find("90210")
+console.log(info)
 /* Output:
 {
   state: 'California',
@@ -39,8 +39,8 @@ console.log(info);
 */
 
 // For invalid ZIP codes, returns empty values with isValid: false
-const invalid = zipcodes.find('00000');
-console.log(invalid);
+const invalid = zipcodes.find("00000")
+console.log(invalid)
 /* Output:
 {
   state: '',
@@ -54,119 +54,115 @@ console.log(invalid);
 */
 
 // Get just the state information
-const stateInfo = zipcodes.findState('10001');
-console.log(stateInfo);  // { state: 'New York', stateCode: 'NY', isValid: true }
+const stateInfo = zipcodes.findState("10001")
+console.log(stateInfo) // { state: 'New York', stateCode: 'NY', isValid: true }
 
 // Get just the city
-const cityInfo = zipcodes.findCity('60601');
-console.log(cityInfo);  // { city: 'Chicago', isValid: true }
+const cityInfo = zipcodes.findCity("60601")
+console.log(cityInfo) // { city: 'Chicago', isValid: true }
 
 // Get just the county
-const countyInfo = zipcodes.findCounty('94105');
-console.log(countyInfo);  // { county: 'San Francisco', isValid: true }
+const countyInfo = zipcodes.findCounty("94105")
+console.log(countyInfo) // { county: 'San Francisco', isValid: true }
 
 // Get just the coordinates
-const coords = zipcodes.findCoordinates('02108');
-console.log(coords);  // { latitude: 42.3588, longitude: -71.0707, isValid: true }
-
-
+const coords = zipcodes.findCoordinates("02108")
+console.log(coords) // { latitude: 42.3588, longitude: -71.0707, isValid: true }
 
 // Find ZIP codes for a city
-const bostonZips = zipcodes.findByCity('Boston', 'MA');
-console.log(`Boston has ${bostonZips.length} ZIP codes`);
+const bostonZips = zipcodes.findByCity("Boston", "MA")
+console.log(`Boston has ${bostonZips.length} ZIP codes`)
 
 // Find ZIP codes in a county
-const kingCountyZips = zipcodes.findByCounty('King', 'WA');
-console.log(`King County has ${kingCountyZips.length} ZIP codes`);
+const kingCountyZips = zipcodes.findByCounty("King", "WA")
+console.log(`King County has ${kingCountyZips.length} ZIP codes`)
 
 // Find ZIP codes within 10 miles of coordinates
-const nearby = zipcodes.findByRadius(37.7749, -122.4194, 10);
-console.log(`Found ${nearby.length} ZIP codes within 10 miles of San Francisco`);
+const nearby = zipcodes.findByRadius(37.7749, -122.4194, 10)
+console.log(`Found ${nearby.length} ZIP codes within 10 miles of San Francisco`)
 
 // Get all states
-const states = zipcodes.getStates();
-console.log(`The US has ${states.length} states and territories with ZIP codes`);
+const states = zipcodes.getStates()
+console.log(`The US has ${states.length} states and territories with ZIP codes`)
 ```
 
 ## API
 
-### find(zipCode: string): ZipLookupResult
+`find(zipCode: string): ZipLookupResult`
 
 Returns complete information for a ZIP code with an `isValid` flag. Always returns an object, even for invalid ZIP codes.
 
 ```typescript
 interface ZipLookupResult {
-  state: string;       // Full state name
-  stateCode: string;   // Two-letter state code
-  city: string;        // City/place name
-  county: string;      // County name
-  latitude: number;    // Decimal latitude
-  longitude: number;   // Decimal longitude
-  isValid: boolean;    // Whether the ZIP code exists
+  state: string // Full state name
+  stateCode: string // Two-letter state code
+  city: string // City/place name
+  county: string // County name
+  latitude: number // Decimal latitude
+  longitude: number // Decimal longitude
+  isValid: boolean // Whether the ZIP code exists
 }
 
 // Internal ZipCodeInfo interface used by findByCity, findByCounty, and findByRadius methods
 interface ZipCodeInfo {
-  zipCode: string;       // 5-digit ZIP code
-  placeName: string;     // City or place name 
-  stateName: string;     // Full state name
-  stateCode: string;     // Two-letter state code
-  countyName: string;    // County name
-  countyCode: string;    // FIPS county code
-  communityName?: string; // Optional community name
-  communityCode?: string; // Optional community code
-  latitude: number;      // Latitude in decimal degrees
-  longitude: number;     // Longitude in decimal degrees
+  zipCode: string // 5-digit ZIP code
+  placeName: string // City or place name
+  stateName: string // Full state name
+  stateCode: string // Two-letter state code
+  countyName: string // County name
+  countyCode: string // FIPS county code
+  communityName?: string // Optional community name
+  communityCode?: string // Optional community code
+  latitude: number // Latitude in decimal degrees
+  longitude: number // Longitude in decimal degrees
 }
 ```
 
-### findState(zipCode: string): StateResult
+`findState(zipCode: string): StateResult`
 
 Returns state information for a ZIP code with validity check.
 
 ```typescript
 interface StateResult {
-  state: string;       // Full state name
-  stateCode: string;   // Two-letter state code
-  isValid: boolean;    // Whether the ZIP code exists
+  state: string // Full state name
+  stateCode: string // Two-letter state code
+  isValid: boolean // Whether the ZIP code exists
 }
 ```
 
-### findCity(zipCode: string): { city: string; isValid: boolean }
+`findCity(zipCode: string): { city: string; isValid: boolean }`
 
 Returns city name for a ZIP code with validity check.
 
-### findCounty(zipCode: string): { county: string; isValid: boolean }
+`findCounty(zipCode: string): { county: string; isValid: boolean }`
 
 Returns county name for a ZIP code with validity check.
 
-### findCoordinates(zipCode: string): Coordinates
+`findCoordinates(zipCode: string): Coordinates`
 
 Returns latitude and longitude for a ZIP code with validity check.
 
 ```typescript
 interface Coordinates {
-  latitude: number;    // Decimal latitude
-  longitude: number;   // Decimal longitude
-  isValid: boolean;    // Whether the ZIP code exists
+  latitude: number // Decimal latitude
+  longitude: number // Decimal longitude
+  isValid: boolean // Whether the ZIP code exists
 }
 ```
 
-
-
-### findByCity(city: string, stateCode: string): ZipCodeInfo[]
+`findByCity(city: string, stateCode: string): ZipCodeInfo[]`
 
 Finds all ZIP codes for a given city and state. Returns an array of ZipCodeInfo objects.
 
-### findByCounty(countyName: string, stateCode: string): ZipCodeInfo[]
+`findByCounty(countyName: string, stateCode: string): ZipCodeInfo[]`
 
 Finds all ZIP codes in a given county. Returns an array of ZipCodeInfo objects.
 
-### findByRadius(latitude: number, longitude: number, radiusMiles: number): ZipCodeInfo[]
+`findByRadius(latitude: number, longitude: number, radiusMiles: number): ZipCodeInfo[]`
 
 Finds ZIP codes within a radius of coordinates, sorted by distance. Returns an array of ZipCodeInfo objects.
 
-### getStates(): Array<{ code: string, name: string }>
+`getStates(): Array<{ code: string, name: string }>`
 
 Returns all states with their codes and names.
 

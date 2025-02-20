@@ -1,40 +1,9 @@
-import { ZipCodeInfo } from "./types"
+import { ZipCodeInfo, ZipLookupResult, StateResult, Coordinates } from "./types"
 import { loadZipCodeData } from "./loader"
 
 // Load ZIP code data during module initialization
 // This creates the in-memory database when the module is first required
 const zipCodeMap = loadZipCodeData()
-
-/**
- * Interface for standardized ZIP code lookup results
- */
-export interface ZipLookupResult {
-  state: string
-  stateCode: string
-  city: string
-  county: string
-  latitude: number
-  longitude: number
-  isValid: boolean
-}
-
-/**
- * Interface for coordinates result
- */
-export interface Coordinates {
-  latitude: number
-  longitude: number
-  isValid: boolean
-}
-
-/**
- * Interface for state result
- */
-export interface StateResult {
-  state: string
-  stateCode: string
-  isValid: boolean
-}
 
 /**
  * Normalized ZIP code lookup helper
