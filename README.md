@@ -3,6 +3,7 @@
 A lightweight and efficient US ZIP code lookup library with no external dependencies.
 
 [![npm version](https://badge.fury.io/js/zipcodes-us.svg)](https://badge.fury.io/js/zipcodes-us.svg)
+[![Tests](https://github.com/ikarthikng/zipcodes-us/actions/workflows/test-and-publish.yml/badge.svg)](https://github.com/ikarthikng/zipcodes-us/actions?query=workflow%3A"Test+and+Publish")
 
 > I try my best to monitor the required dependencies daily and publish updates to the npm package whenever changes are detected.
 
