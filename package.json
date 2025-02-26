@@ -1,6 +1,6 @@
 {
   "name": "zipcodes-us",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
