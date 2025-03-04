@@ -268,8 +268,8 @@ export function getStates(): Array<{ code: string; name: string }> {
 // Export types
 export { ZipCodeInfo }
 
-// Public API
-export default {
+// Create and export all methods as named and default export
+const zipcodesUs = {
   find,
   findState,
   findCity,
@@ -280,3 +280,6 @@ export default {
   findByRadius,
   getStates
 }
+
+// Export as default and as individual named exports
+export default zipcodesUs

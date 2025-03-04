@@ -72,3 +72,18 @@ export interface StateResult {
   stateCode: string
   isValid: boolean
 }
+
+/**
+ * Interface for the default export
+ */
+export interface ZipCodeUtils {
+  find: (zipCode: string) => ZipLookupResult
+  findState: (zipCode: string) => StateResult
+  findCity: (zipCode: string) => { city: string; isValid: boolean }
+  findCounty: (zipCode: string) => { county: string; isValid: boolean }
+  findCoordinates: (zipCode: string) => Coordinates
+  findByCity: (city: string, stateCode: string) => ZipCodeInfo[]
+  findByCounty: (countyName: string, stateCode: string) => ZipCodeInfo[]
+  findByRadius: (latitude: number, longitude: number, radiusMiles: number) => ZipCodeInfo[]
+  getStates: () => Array<{ code: string; name: string }>
+}

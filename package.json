@@ -1,6 +1,6 @@
 {
   "name": "zipcodes-us",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support - works in both browser and Node.js",
   "main": "dist/index.js",
@@ -8,11 +8,19 @@
   "types": "dist/index.d.ts",
   "browser": "dist/index.umd.js",
   "sideEffects": false,
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "files": [
     "dist",
     "data"
   ],
   "scripts": {
+    "download-data": "node scripts/download-data.js",
     "prebuild": "rimraf dist && node --loader ts-node/esm src/scripts/process-data.ts",
     "build": "rollup -c",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",

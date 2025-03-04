@@ -1,90 +1,60 @@
-import typescript from "@rollup/plugin-typescript"
-import { nodeResolve } from "@rollup/plugin-node-resolve"
+// rollup.config.js
+import resolve from "@rollup/plugin-node-resolve"
 import commonjs from "@rollup/plugin-commonjs"
-import json from "@rollup/plugin-json"
+import typescript from "@rollup/plugin-typescript"
 import terser from "@rollup/plugin-terser"
+import json from "@rollup/plugin-json"
+import { readFileSync } from "fs"
+
+// Read package.json manually to avoid issues with JSON imports
+const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"))
 
 export default [
-  // CommonJS build (for Node.js)
+  // ESM build
   {
     input: "src/index.ts",
     output: {
-      file: "dist/index.js",
+      file: pkg.module,
+      format: "es",
+      sourcemap: true
+    },
+    external: ["fs", "path", "url"],
+    plugins: [resolve({ preferBuiltins: true }), commonjs(), json(), typescript({ tsconfig: "./tsconfig.json" })]
+  },
+  // CommonJS build
+  {
+    input: "src/index.ts",
+    output: {
+      file: pkg.main,
       format: "cjs",
-      sourcemap: true
+      sourcemap: true,
+      exports: "named"
     },
-    external: ["fs", "path"],
-    plugins: [
-      typescript({
-        tsconfig: "./tsconfig.json",
-        declaration: true,
-        declarationDir: "dist"
-      }),
-      nodeResolve(),
-      commonjs(),
-      json()
-    ]
+    external: ["fs", "path", "url"],
+    plugins: [resolve({ preferBuiltins: true }), commonjs(), json(), typescript({ tsconfig: "./tsconfig.json" })]
   },
-
-  // ES module build (for bundlers)
+  // UMD build (browser-friendly)
   {
     input: "src/index.ts",
     output: {
-      file: "dist/index.esm.js",
-      format: "esm",
-      sourcemap: true
-    },
-    external: ["fs", "path"],
-    plugins: [
-      typescript({
-        tsconfig: "./tsconfig.json"
-      }),
-      nodeResolve(),
-      commonjs(),
-      json()
-    ]
-  },
-
-  // UMD build (for browsers)
-  {
-    input: "src/index.ts",
-    output: {
-      file: "dist/index.umd.js",
+      name: "zipcodes",
+      file: pkg.browser,
       format: "umd",
-      name: "ZipCodesUS",
-      sourcemap: true
+      sourcemap: true,
+      globals: {
+        fs: "fs",
+        path: "path",
+        url: "url"
+      }
     },
     plugins: [
-      typescript({
-        tsconfig: "./tsconfig.json"
-      }),
-      nodeResolve({
+      resolve({
+        preferBuiltins: true,
         browser: true
       }),
       commonjs(),
       json(),
-      terser()
-    ]
-  },
-
-  // Minified UMD build
-  {
-    input: "src/index.ts",
-    output: {
-      file: "dist/index.umd.min.js",
-      format: "umd",
-      name: "ZipCodesUS",
-      sourcemap: true
-    },
-    plugins: [
-      typescript({
-        tsconfig: "./tsconfig.json"
-      }),
-      nodeResolve({
-        browser: true
-      }),
-      commonjs(),
-      json(),
+      typescript({ tsconfig: "./tsconfig.json" }),
       terser()
     ]
   }
