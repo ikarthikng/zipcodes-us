@@ -4,10 +4,19 @@ import commonjs from "@rollup/plugin-commonjs"
 import typescript from "@rollup/plugin-typescript"
 import terser from "@rollup/plugin-terser"
 import json from "@rollup/plugin-json"
-import { readFileSync } from "fs"
+import { readFileSync, existsSync } from "fs"
+import path from "path"
 
 // Read package.json manually to avoid issues with JSON imports
 const pkg = JSON.parse(readFileSync(new URL("./package.json", import.meta.url), "utf8"))
+
+// Check if the processed data file exists
+const dataFilePath = path.resolve("data", "zip-data.js")
+if (!existsSync(dataFilePath)) {
+  console.warn("Warning: zip-data.js not found in data directory.")
+  console.warn("The build will proceed, but the library may not work correctly.")
+  console.warn("Please run 'npm run process-data' to generate the data file first.")
+}
 
 export default [
   // ESM build
@@ -16,10 +25,19 @@ export default [
     output: {
       file: pkg.module,
       format: "es",
-      sourcemap: true
+      sourcemap: true,
+      // We need to preserve the module structure for import resolution
+      preserveModules: false
     },
-    external: ["fs", "path", "url"],
-    plugins: [resolve({ preferBuiltins: true }), commonjs(), json(), typescript({ tsconfig: "./tsconfig.json" })]
+    external: [],
+    plugins: [
+      resolve({
+        preferBuiltins: true
+      }),
+      commonjs(),
+      json(),
+      typescript({ tsconfig: "./tsconfig.json" })
+    ]
   },
   // CommonJS build
   {
@@ -28,10 +46,19 @@ export default [
       file: pkg.main,
       format: "cjs",
       sourcemap: true,
-      exports: "named"
+      exports: "named",
+      // Ensure correct resolution of imports
+      preserveModules: false
     },
-    external: ["fs", "path", "url"],
-    plugins: [resolve({ preferBuiltins: true }), commonjs(), json(), typescript({ tsconfig: "./tsconfig.json" })]
+    external: [],
+    plugins: [
+      resolve({
+        preferBuiltins: true
+      }),
+      commonjs(),
+      json(),
+      typescript({ tsconfig: "./tsconfig.json" })
+    ]
   },
   // UMD build (browser-friendly)
   {
@@ -40,12 +67,7 @@ export default [
       name: "zipcodes",
       file: pkg.browser,
       format: "umd",
-      sourcemap: true,
-      globals: {
-        fs: "fs",
-        path: "path",
-        url: "url"
-      }
+      sourcemap: true
     },
     plugins: [
       resolve({

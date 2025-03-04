@@ -10,7 +10,8 @@ const __dirname = path.dirname(__filename)
 
 // Define paths
 const sourceDataPath = path.join(__dirname, "..", "..", "data", "US.txt")
-const outputPath = path.join(__dirname, "..", "..", "data", "zip-data.js")
+const outputJsPath = path.join(__dirname, "..", "..", "data", "zip-data.js")
+const outputDtsPath = path.join(__dirname, "..", "..", "data", "zip-data.d.ts")
 
 /**
  * Process the data file and generate a JavaScript module
@@ -22,7 +23,15 @@ async function processData() {
     // Check if the source file exists
     if (!fs.existsSync(sourceDataPath)) {
       console.error(`Source data file not found: ${sourceDataPath}`)
+      console.error(`Please download the US.txt file and place it in the data directory.`)
       process.exit(1)
+    }
+
+    // Make sure the output directory exists
+    const outputDir = path.dirname(outputJsPath)
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir, { recursive: true })
+      console.log(`Created data directory: ${outputDir}`)
     }
 
     // Read the raw data file
@@ -56,8 +65,18 @@ async function processData() {
 export default ${JSON.stringify(processedData)};
 `
 
-    fs.writeFileSync(outputPath, jsContent, "utf8")
-    console.log(`Successfully wrote processed data to: ${outputPath}`)
+    fs.writeFileSync(outputJsPath, jsContent, "utf8")
+    console.log(`Successfully wrote processed data to: ${outputJsPath}`)
+
+    // Create a TypeScript declaration file
+    const dtsContent = `import { ZipCodeInfo } from '../src/types.js'
+
+declare const zipCodeData: ZipCodeInfo[]
+export default zipCodeData
+`
+
+    fs.writeFileSync(outputDtsPath, dtsContent, "utf8")
+    console.log(`Successfully wrote type declaration to: ${outputDtsPath}`)
   } catch (error) {
     console.error("Error processing ZIP code data:", error)
     process.exit(1)

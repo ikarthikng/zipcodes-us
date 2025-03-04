@@ -1,6 +1,6 @@
 {
   "name": "zipcodes-us",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support - works in both browser and Node.js",
   "main": "dist/index.js",
@@ -21,13 +21,16 @@
   ],
   "scripts": {
     "download-data": "node scripts/download-data.js",
-    "prebuild": "rimraf dist && node --loader ts-node/esm src/scripts/process-data.ts",
+    "process-data": "node --loader ts-node/esm src/scripts/process-data.ts",
+    "check-data": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync(path.join('data','zip-data.js'))){console.error('Error: zip-data.js not found! Please run npm run process-data first.');process.exit(1)}\"",
+    "prebuild": "rimraf dist && npm run check-data || npm run process-data",
     "build": "rollup -c",
     "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "prepare": "npm run build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage"
+    "test:coverage": "jest --coverage",
+    "postinstall": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync(path.join('data','zip-data.js'))){console.warn('Warning: zip-data.js not found. If you plan to use this package, run npm run process-data first.')}\""
   },
   "keywords": [
     "zipcode",
