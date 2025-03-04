@@ -1,17 +1,23 @@
 {
   "name": "zipcodes-us",
-  "version": "0.2.4",
-  "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support - works in both browser and Node.js",
   "main": "dist/index.js",
+  "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
+  "browser": "dist/index.umd.js",
+  "sideEffects": false,
   "files": [
     "dist",
     "data"
   ],
   "scripts": {
-    "build": "rimraf dist && tsc",
+    "prebuild": "rimraf dist && node --loader ts-node/esm src/scripts/process-data.ts",
+    "build": "rollup -c",
+    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "prepare": "npm run build",
-    "test": "jest",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage"
   },
@@ -29,18 +35,28 @@
     "find city by zipcode",
     "find state by zipcode",
     "find county by zipcode",
-    "find geo by zipcode"
+    "find geo by zipcode",
+    "browser",
+    "universal",
+    "isomorphic"
   ],
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-json": "^6.1.0",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^12.1.2",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.4",
+    "@types/node": "^22.13.9",
     "jest": "^29.7.0",
     "rimraf": "^6.0.1",
-    "ts-jest": "^29.2.5",
+    "rollup": "^4.34.9",
+    "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.7.3"
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.2"
   },
   "repository": {
     "type": "git",

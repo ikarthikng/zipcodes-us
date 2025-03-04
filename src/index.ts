@@ -1,5 +1,5 @@
-import { ZipCodeInfo, ZipLookupResult, StateResult, Coordinates } from "./types"
-import { loadZipCodeData } from "./loader"
+import { ZipCodeInfo, ZipLookupResult, StateResult, Coordinates } from "./types.js"
+import { loadZipCodeData } from "./loader.js"
 
 // Load ZIP code data during module initialization
 // This creates the in-memory database when the module is first required
