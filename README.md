@@ -7,7 +7,7 @@ A lightweight and efficient US ZIP code lookup library with no external dependen
 
 > I try my best to monitor the required dependencies daily and publish updates to the npm package whenever changes are detected.
 
-## 🔄 **Data Last Updated:** _3rd March 2025_
+## 🔄 **Data Last Updated:** _4th March 2025_
 
 ## Features
 
@@ -16,6 +16,7 @@ A lightweight and efficient US ZIP code lookup library with no external dependen
 - Find ZIP codes by city, state, and county
 - Find ZIP codes within a radius of coordinates
 - Returns complete information including state, city, county, and coordinates
+- **Universal compatibility** - works in both Node.js and browser/React environments
 - TypeScript support with full type definitions
 - Zero runtime dependencies
 
@@ -26,6 +27,10 @@ npm install zipcodes-us
 ```
 
 ## Usage
+
+This library works seamlessly in both Node.js and browser/React environments with no configuration needed.
+
+### Basic Usage
 
 ```typescript
 import zipcodes from "zipcodes-us"
@@ -91,6 +96,84 @@ console.log(`Found ${nearby.length} ZIP codes within 10 miles of San Francisco`)
 // Get all states
 const states = zipcodes.getStates()
 console.log(`The US has ${states.length} states and territories with ZIP codes`)
+```
+
+### Node.js Example
+
+```typescript
+import zipcodes from "zipcodes-us"
+import fs from "fs"
+
+// Find all ZIP codes for a specific city
+const bostonZips = zipcodes.findByCity("Boston", "MA")
+
+// Save the data to a file
+fs.writeFileSync("boston-zips.json", JSON.stringify(bostonZips, null, 2))
+
+console.log(`Saved ${bostonZips.length} Boston ZIP codes to file`)
+```
+
+### React/Browser Example
+
+```jsx
+import React, { useState } from "react"
+import zipcodes from "zipcodes-us"
+
+function ZipCodeLookup() {
+  const [zipCode, setZipCode] = useState("")
+  const [result, setResult] = useState(null)
+  const [error, setError] = useState("")
+
+  const handleLookup = () => {
+    setError("")
+    const info = zipcodes.find(zipCode)
+
+    if (info.isValid) {
+      setResult(info)
+    } else {
+      setError("Invalid ZIP code")
+      setResult(null)
+    }
+  }
+
+  return (
+    <div>
+      <h2>ZIP Code Lookup</h2>
+      <div>
+        <input
+          type="text"
+          value={zipCode}
+          onChange={(e) => setZipCode(e.target.value)}
+          placeholder="Enter ZIP code"
+          maxLength={5}
+        />
+        <button onClick={handleLookup}>Lookup</button>
+      </div>
+
+      {error && <div style={{ color: "red" }}>{error}</div>}
+
+      {result && (
+        <div>
+          <h3>Results for {zipCode}</h3>
+          <p>
+            <strong>City:</strong> {result.city}
+          </p>
+          <p>
+            <strong>State:</strong> {result.state} ({result.stateCode})
+          </p>
+          <p>
+            <strong>County:</strong> {result.county}
+          </p>
+          <p>
+            <strong>Coordinates:</strong> {result.latitude}, {result.longitude}
+          </p>
+        </div>
+      )}
+    </div>
+  )
+}
+
+export default ZipCodeLookup
 ```
 
 ## API
@@ -172,6 +255,15 @@ Finds ZIP codes within a radius of coordinates, sorted by distance. Returns an a
 `getStates(): Array<{ code: string, name: string }>`
 
 Returns all states with their codes and names.
+
+## How Browser Compatibility Works
+
+The library automatically determines the environment it's running in:
+
+- **In browsers/React**: Uses pre-processed bundled data for optimal performance
+- **In Node.js**: Can fall back to reading the data file directly if needed
+
+This dual-loading strategy ensures the package works efficiently in any JavaScript environment without any additional configuration.
 
 ## Data Source
 
