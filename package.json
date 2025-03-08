@@ -1,6 +1,6 @@
 {
   "name": "zipcodes-us",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "type": "module",
   "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support - works in both browser and Node.js",
   "main": "dist/index.js",
@@ -20,7 +20,7 @@
     "data"
   ],
   "scripts": {
-    "download-data": "node scripts/download-data.js",
+    "download-data": "node src/scripts/download-data.js",
     "process-data": "node --loader ts-node/esm src/scripts/process-data.ts",
     "check-data": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync(path.join('data','zip-data.js'))){console.error('Error: zip-data.js not found! Please run npm run process-data first.');process.exit(1)}\"",
     "prebuild": "rimraf dist && npm run check-data || npm run process-data",
@@ -60,14 +60,16 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.13.9",
+    "@types/node": "^22.13.10",
+    "@types/unzipper": "^0.10.11",
     "jest": "^29.7.0",
     "rimraf": "^6.0.1",
     "rollup": "^4.34.9",
     "ts-jest": "^29.2.6",
     "ts-node": "^10.9.2",
     "tslib": "^2.8.1",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "unzipper": "^0.12.3"
   },
   "repository": {
     "type": "git",
