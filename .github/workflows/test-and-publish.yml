@@ -1,32 +1,25 @@
 # .github/workflows/test-and-publish.yml
-
 name: Test and Publish
-
 on:
   pull_request:
     branches: [master]
   push:
     branches: [master]
-
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
-
       - name: Install dependencies
         run: npm ci
-
       - name: Run tests
         id: run-tests
         run: npm test
         continue-on-error: true
-
       - name: Check test results
         if: steps.run-tests.outcome == 'failure'
         uses: actions/github-script@v6
@@ -39,35 +32,31 @@ jobs:
               body: '❌ Tests have failed for this PR. Please check the workflow run for details.'
             });
             core.setFailed('Tests failed!');
-
   publish:
     needs: test
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # Required for OIDC
     steps:
       - uses: actions/checkout@v3
-
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: "20.x"
           registry-url: "https://registry.npmjs.org"
-
       - name: Install dependencies
         run: npm ci
-
       - name: Build package
         run: npm run build
-
       - name: Check version
         id: check-version
         run: |
           PKG_VERSION=$(node -p "require('./package.json').version")
           echo "Current package version: $PKG_VERSION"
-
           NPM_VERSION=$(npm view $(node -p "require('./package.json').name") version 2>/dev/null || echo "0.0.0")
           echo "Latest published version: $NPM_VERSION"
-
           if [ "$(printf '%s\n' "$NPM_VERSION" "$PKG_VERSION" | sort -V | tail -n1)" == "$PKG_VERSION" ] && [ "$NPM_VERSION" != "$PKG_VERSION" ]; then
             echo "✅ Package version ($PKG_VERSION) is newer than npm version ($NPM_VERSION)"
             echo "should_publish=true" >> $GITHUB_OUTPUT
@@ -75,13 +64,11 @@ jobs:
             echo "❌ Package version ($PKG_VERSION) is not newer than npm version ($NPM_VERSION)"
             echo "should_publish=false" >> $GITHUB_OUTPUT
           fi
-
       - name: Publish to npm
         if: steps.check-version.outputs.should_publish == 'true'
-        run: npm publish
+        run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
       - name: Notify about skipped publish
         if: steps.check-version.outputs.should_publish == 'false'
         run: |
