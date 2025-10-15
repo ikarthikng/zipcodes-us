@@ -1,6 +1,6 @@
 {
   "name": "zipcodes-us",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "type": "module",
   "description": "Fast, lightweight US ZIP code lookup library providing city, state, county, and geographic coordinates with TypeScript support - works in both browser and Node.js",
   "main": "dist/index.js",
