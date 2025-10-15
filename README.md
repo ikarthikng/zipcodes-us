@@ -23,6 +23,36 @@ A lightweight and efficient US ZIP code lookup library with no external dependen
 - TypeScript support with full type definitions
 - Zero runtime dependencies
 
+## Why Choose zipcodes-us?
+
+- **🚀 Zero Dependencies** - No bloat, just pure functionality
+- **⚡ Lightning Fast** - In-memory lookups with instant results
+- **🌐 Universal** - Same code works in Node.js, React, Next.js, and browsers
+- **📦 Tiny Bundle** - Minimal impact on your bundle size
+- **🔄 Always Up-to-Date** - Data checked and updated daily
+- **💪 Type-Safe** - Full TypeScript support out of the box
+- **🎯 Battle-Tested** - Reliable and production-ready
+
+**Compared to alternatives:**
+
+- Unlike `zipcode-to-timezone`, we provide complete geographic data
+- Unlike `zipcodes`, we support both Node.js and browsers seamlessly
+- Unlike manual API calls, no rate limits or network latency
+
+## 🚀 Try It Now
+
+**Live Demo:** [CodeSandbox Demo](https://codesandbox.io/p/sandbox/little-haze-cc7h58)
+
+**Quick Example:**
+
+```javascript
+import zipcodes from "zipcodes-us"
+
+// One line to get complete ZIP code info
+const info = zipcodes.find("90210")
+// → { city: 'Beverly Hills', state: 'California', ... }
+```
+
 ## Installation
 
 ```bash
@@ -179,6 +209,52 @@ function ZipCodeLookup() {
 export default ZipCodeLookup
 ```
 
+## 💡 Common Use Cases
+
+### Validate ZIP Codes
+
+```typescript
+// Check if a ZIP code is valid
+const info = zipcodes.find("90210")
+if (info.isValid) {
+  console.log(`Valid ZIP in ${info.city}, ${info.state}`)
+}
+```
+
+### Auto-Complete City/State from ZIP
+
+```typescript
+// User enters ZIP, auto-fill city and state
+const { city, state } = zipcodes.find(userZipCode)
+addressForm.city.value = city
+addressForm.state.value = state
+```
+
+### Find All ZIP Codes in a City
+
+```typescript
+// Get all ZIP codes for a specific city
+const allBostonZips = zipcodes.findByCity("Boston", "MA")
+console.log(`Boston has ${allBostonZips.length} ZIP codes`)
+```
+
+### Geographic Proximity Search
+
+```typescript
+// Find ZIP codes within 50 miles of coordinates
+const nearbyZips = zipcodes.findByRadius(37.7749, -122.4194, 50)
+// Use these for location-based features
+```
+
+### Display Location Information
+
+```typescript
+// Show detailed location info from just a ZIP code
+const info = zipcodes.find("10001")
+displayMap(info.latitude, info.longitude)
+showDetails(`${info.city}, ${info.county} County, ${info.state}`)
+```
+
 ## API
 
 `find(zipCode: string): ZipLookupResult`
@@ -267,6 +343,10 @@ The library automatically determines the environment it's running in:
 - **In Node.js**: Can fall back to reading the data file directly if needed
 
 This dual-loading strategy ensures the package works efficiently in any JavaScript environment without any additional configuration.
+
+## Related Projects
+
+Looking for Indian postal codes? Check out **[postalcodes-india](https://github.com/ikarthikng/postalcodes-india)** - the same functionality for India! 🇮🇳
 
 ## Data Source
 

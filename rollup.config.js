@@ -25,7 +25,7 @@ export default [
     output: {
       file: pkg.module,
       format: "es",
-      sourcemap: true,
+      sourcemap: false,
       // We need to preserve the module structure for import resolution
       preserveModules: false
     },
@@ -45,7 +45,7 @@ export default [
     output: {
       file: pkg.main,
       format: "cjs",
-      sourcemap: true,
+      sourcemap: false,
       exports: "named",
       // Ensure correct resolution of imports
       preserveModules: false
@@ -67,7 +67,7 @@ export default [
       name: "zipcodes",
       file: pkg.browser,
       format: "umd",
-      sourcemap: true
+      sourcemap: false
     },
     plugins: [
       resolve({
