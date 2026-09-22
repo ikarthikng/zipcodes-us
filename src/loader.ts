@@ -2,7 +2,27 @@ import { ZipCodeInfo, RawZipData } from "./types.js"
 
 // Import pre-processed data directly
 // @ts-ignore
-import zipCodeDataArray from "../data/zip-data.js"
+import packedZipCodeData from "../data/zip-data.js"
+
+/**
+ * Separators for the packed data format written by process-data.ts.
+ *
+ * The packed string is four sections joined by SECTION_SEPARATOR:
+ *
+ *   0. states   - one "stateName<TAB>stateCode" per line
+ *   1. counties - one "countyName<TAB>countyCode" per line
+ *   2. places   - one place name per line
+ *   3. entries  - one ZIP code per line:
+ *                 zipCode, placeIndex, stateIndex, countyIndex, latitude, longitude
+ *                 plus communityName and communityCode on the records that have them
+ *
+ * Indexes are base 36. State, county and place names repeat heavily across the 41,000 records -
+ * there are only 53 states and 1,864 county names - so naming each one once and pointing at it is
+ * what keeps the file small. None of these separators occur in any GeoNames field.
+ */
+export const SECTION_SEPARATOR = "\u0000"
+export const LINE_SEPARATOR = "\n"
+export const FIELD_SEPARATOR = "\t"
 
 /**
  * Parses a line from the GeoNames US.txt file
@@ -79,13 +99,46 @@ export function loadZipCodeData(): Map<string, ZipCodeInfo> {
   const zipMap = new Map<string, ZipCodeInfo>()
 
   try {
-    // Use the imported data array
-    if (zipCodeDataArray && Array.isArray(zipCodeDataArray)) {
-      for (const item of zipCodeDataArray) {
-        zipMap.set(item.zipCode, item)
-      }
-    } else {
+    if (typeof packedZipCodeData !== "string" || !packedZipCodeData) {
       throw new Error("ZIP code data not available. Make sure zip-data.js is generated correctly.")
+    }
+
+    const sections = packedZipCodeData.split(SECTION_SEPARATOR)
+
+    if (sections.length !== 4) {
+      throw new Error("ZIP code data is malformed. Re-run 'npm run process-data' to regenerate it.")
+    }
+
+    const states = sections[0].split(LINE_SEPARATOR).map((state) => state.split(FIELD_SEPARATOR))
+    const counties = sections[1].split(LINE_SEPARATOR).map((county) => county.split(FIELD_SEPARATOR))
+    const places = sections[2].split(LINE_SEPARATOR)
+
+    for (const entry of sections[3].split(LINE_SEPARATOR)) {
+      const fields = entry.split(FIELD_SEPARATOR)
+      const state = states[parseInt(fields[2], 36)]
+      const county = counties[parseInt(fields[3], 36)]
+
+      const info: ZipCodeInfo = {
+        zipCode: fields[0],
+        placeName: places[parseInt(fields[1], 36)],
+        stateName: state[0],
+        stateCode: state[1],
+        countyName: county[0],
+        countyCode: county[1],
+        latitude: parseFloat(fields[4]),
+        longitude: parseFloat(fields[5])
+      }
+
+      // Only add optional fields if they have values
+      if (fields[6]) {
+        info.communityName = fields[6]
+      }
+
+      if (fields[7]) {
+        info.communityCode = fields[7]
+      }
+
+      zipMap.set(info.zipCode, info)
     }
 
     return zipMap

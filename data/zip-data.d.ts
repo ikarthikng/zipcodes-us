@@ -1,4 +1,2 @@
-import { ZipCodeInfo } from '../src/types.js'
-
-declare const zipCodeData: ZipCodeInfo[]
+declare const zipCodeData: string
 export default zipCodeData
