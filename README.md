@@ -337,12 +337,17 @@ Returns all states with their codes and names.
 
 ## How Browser Compatibility Works
 
-The library automatically determines the environment it's running in:
+The ZIP code data is bundled into the package at build time, so there are no file reads or network requests at runtime. The same data works unchanged in Node.js, browsers, and frameworks like React and Next.js, without any configuration.
 
-- **In browsers/React**: Uses pre-processed bundled data for optimal performance
-- **In Node.js**: Can fall back to reading the data file directly if needed
+## Development
 
-This dual-loading strategy ensures the package works efficiently in any JavaScript environment without any additional configuration.
+`data/US.txt` (GeoNames) is the source of truth. `data/zip-data.js` is generated from it and is not committed.
+
+```bash
+npm ci            # installs and runs the build (generates data/zip-data.js, then bundles)
+npm test
+npm run process-data   # regenerate data/zip-data.js after editing data/US.txt
+```
 
 ## Related Projects
 
