@@ -22,15 +22,12 @@
   "scripts": {
     "download-data": "node src/scripts/download-data.js",
     "process-data": "node --loader ts-node/esm src/scripts/process-data.ts",
-    "check-data": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync(path.join('data','zip-data.js'))){console.error('Error: zip-data.js not found! Please run npm run process-data first.');process.exit(1)}\"",
-    "prebuild": "rimraf dist && npm run check-data || npm run process-data",
+    "prebuild": "rimraf dist && npm run process-data",
     "build": "rollup -c",
-    "build:types": "tsc --emitDeclarationOnly --outDir dist",
     "prepare": "npm run build",
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "postinstall": "node -e \"const fs=require('fs');const path=require('path');if(!fs.existsSync(path.join('data','zip-data.js'))){console.warn('Warning: zip-data.js not found. If you plan to use this package, run npm run process-data first.')}\""
+    "test:coverage": "jest --coverage"
   },
   "keywords": [
     "zipcode",
@@ -55,7 +52,6 @@
   "license": "MIT",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^28.0.6",
-    "@rollup/plugin-json": "^6.1.0",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.4",

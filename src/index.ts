@@ -2,23 +2,7 @@ import { ZipCodeInfo, ZipLookupResult, StateResult, Coordinates } from "./types.
 import { loadZipCodeData } from "./loader.js"
 
 // Load ZIP code data during module initialization
-// This creates the in-memory database when the module is first required
 const zipCodeMap = loadZipCodeData()
-
-/**
- * Normalized ZIP code lookup helper
- * @param zipCode ZIP code to normalize and look up
- * @returns Tuple of [normalized ZIP code, lookup result]
- */
-function normalizedLookup(zipCode: string): [string, ZipCodeInfo | null] {
-  const normalizedZip = zipCode.trim()
-
-  if (!/^\d{5}$/.test(normalizedZip)) {
-    return [normalizedZip, null]
-  }
-
-  return [normalizedZip, zipCodeMap.get(normalizedZip) || null]
-}
 
 /**
  * Finds complete information for a ZIP code
@@ -26,18 +10,10 @@ function normalizedLookup(zipCode: string): [string, ZipCodeInfo | null] {
  * @returns Object with location data and validity flag
  */
 export function find(zipCode: string): ZipLookupResult {
-  const [normalized, info] = normalizedLookup(zipCode)
+  const info = zipCodeMap.get(zipCode.trim())
 
   if (!info) {
-    return {
-      state: "",
-      stateCode: "",
-      city: "",
-      county: "",
-      latitude: 0,
-      longitude: 0,
-      isValid: false
-    }
+    return { state: "", stateCode: "", city: "", county: "", latitude: 0, longitude: 0, isValid: false }
   }
 
   return {
@@ -51,142 +27,59 @@ export function find(zipCode: string): ZipLookupResult {
   }
 }
 
-/**
- * Finds state information for a ZIP code
- * @param zipCode 5-digit ZIP code to look up
- * @returns State name and code with validity flag
- */
+/** Finds state name and code for a ZIP code */
 export function findState(zipCode: string): StateResult {
-  const [normalized, info] = normalizedLookup(zipCode)
-
-  if (!info) {
-    return {
-      state: "",
-      stateCode: "",
-      isValid: false
-    }
-  }
-
-  return {
-    state: info.stateName,
-    stateCode: info.stateCode,
-    isValid: true
-  }
+  const { state, stateCode, isValid } = find(zipCode)
+  return { state, stateCode, isValid }
 }
 
-/**
- * Finds city name for a ZIP code
- * @param zipCode 5-digit ZIP code to look up
- * @returns City name or empty string with validity flag
- */
+/** Finds city name for a ZIP code */
 export function findCity(zipCode: string): { city: string; isValid: boolean } {
-  const [normalized, info] = normalizedLookup(zipCode)
-
-  if (!info) {
-    return {
-      city: "",
-      isValid: false
-    }
-  }
-
-  return {
-    city: info.placeName,
-    isValid: true
-  }
+  const { city, isValid } = find(zipCode)
+  return { city, isValid }
 }
 
-/**
- * Finds county name for a ZIP code
- * @param zipCode 5-digit ZIP code to look up
- * @returns County name or empty string with validity flag
- */
+/** Finds county name for a ZIP code */
 export function findCounty(zipCode: string): { county: string; isValid: boolean } {
-  const [normalized, info] = normalizedLookup(zipCode)
-
-  if (!info) {
-    return {
-      county: "",
-      isValid: false
-    }
-  }
-
-  return {
-    county: info.countyName,
-    isValid: true
-  }
+  const { county, isValid } = find(zipCode)
+  return { county, isValid }
 }
 
-/**
- * Finds coordinates for a ZIP code
- * @param zipCode 5-digit ZIP code to look up
- * @returns Latitude and longitude with validity flag
- */
+/** Finds coordinates for a ZIP code */
 export function findCoordinates(zipCode: string): Coordinates {
-  const [normalized, info] = normalizedLookup(zipCode)
+  const { latitude, longitude, isValid } = find(zipCode)
+  return { latitude, longitude, isValid }
+}
 
-  if (!info) {
-    return {
-      latitude: 0,
-      longitude: 0,
-      isValid: false
-    }
+function filterBy(field: "placeName" | "countyName", value: string, stateCode: string): ZipCodeInfo[] {
+  if (!value || !stateCode) {
+    return []
   }
 
-  return {
-    latitude: info.latitude,
-    longitude: info.longitude,
-    isValid: true
-  }
+  const normalizedValue = value.trim().toLowerCase()
+  const normalizedState = stateCode.trim().toUpperCase()
+
+  return [...zipCodeMap.values()].filter(
+    (info) => info[field].toLowerCase() === normalizedValue && info.stateCode === normalizedState
+  )
 }
 
 /**
  * Finds all ZIP codes for a given city and state
  * @param city City name
  * @param stateCode Two-letter state code (e.g., "CA")
- * @returns Array of matching ZIP codes with their information
  */
 export function findByCity(city: string, stateCode: string): ZipCodeInfo[] {
-  if (!city || !stateCode) {
-    return []
-  }
-
-  const normalizedCity = city.trim().toLowerCase()
-  const normalizedState = stateCode.trim().toUpperCase()
-
-  const results: ZipCodeInfo[] = []
-
-  zipCodeMap.forEach((info) => {
-    if (info.placeName.toLowerCase() === normalizedCity && info.stateCode === normalizedState) {
-      results.push(info)
-    }
-  })
-
-  return results
+  return filterBy("placeName", city, stateCode)
 }
 
 /**
  * Find all ZIP codes in a given county
  * @param countyName County name
  * @param stateCode Two-letter state code
- * @returns Array of matching ZIP codes with their information
  */
 export function findByCounty(countyName: string, stateCode: string): ZipCodeInfo[] {
-  if (!countyName || !stateCode) {
-    return []
-  }
-
-  const normalizedCounty = countyName.trim().toLowerCase()
-  const normalizedState = stateCode.trim().toUpperCase()
-
-  const results: ZipCodeInfo[] = []
-
-  zipCodeMap.forEach((info) => {
-    if (info.countyName.toLowerCase() === normalizedCounty && info.stateCode === normalizedState) {
-      results.push(info)
-    }
-  })
-
-  return results
+  return filterBy("countyName", countyName, stateCode)
 }
 
 /**

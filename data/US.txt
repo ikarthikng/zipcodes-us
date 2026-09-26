@@ -24844,6 +24844,7 @@ US	89036	North Las Vegas	Nevada	NV	Clark	003			36.1989	-115.1175	4
 US	89037	Coyote Springs	Nevada	NV	Clark	003			36.1579	-114.934	1
 US	89039	Cal Nev Ari	Nevada	NV	Clark	003			35.2522	-114.8714	4
 US	89040	Overton	Nevada	NV	Clark	003			36.5703	-114.4732	4
+US	89044	Henderson	Nevada	NV	Clark	003			35.9025	-115.1789	1
 US	89046	Searchlight	Nevada	NV	Clark	003			35.5132	-114.8866	4
 US	89052	Henderson	Nevada	NV	Clark	003			35.9878	-115.1167	4
 US	89053	Henderson	Nevada	NV	Clark	003			35.9279	-114.9721	4
@@ -24980,7 +24981,6 @@ US	89008	Caliente	Nevada	NV	Lincoln	017			37.6128	-114.5097	4
 US	89017	Hiko	Nevada	NV	Lincoln	017			37.5926	-115.2262	4
 US	89042	Panaca	Nevada	NV	Lincoln	017			37.7905	-114.3894	4
 US	89043	Pioche	Nevada	NV	Lincoln	017			37.8981	-114.3968	4
-US	89044	Henderson	Nevada	NV	Lincoln	017			35.9025	-115.1789	1
 US	89403	Dayton	Nevada	NV	Lyon	019			39.2806	-119.5287	4
 US	89408	Fernley	Nevada	NV	Lyon	019			39.6019	-119.235	4
 US	89428	Silver City	Nevada	NV	Lyon	019			39.2652	-119.6388	4

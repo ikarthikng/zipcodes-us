@@ -2,7 +2,7 @@
 import fs from "fs"
 import path from "path"
 import { fileURLToPath } from "url"
-import { parseLine, toZipCodeInfo } from "../loader.js"
+import { parseLine, toZipCodeInfo } from "../parse.js"
 
 // Get current file directory (needed for ES modules)
 const __filename = fileURLToPath(import.meta.url)
